@@ -1,0 +1,32 @@
+* {
+  margin: 0;
+}
+
+.search-form {
+  display: flex;
+  padding: 20px;
+  background-color: #2222c5;
+  justify-content: center;
+}
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+}
+
+.photo-card img {
+  width: 360px;
+  height: 220px;
+}
+
+.info {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+}
