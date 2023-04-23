@@ -8,19 +8,22 @@ export default class ImagesApiServise {
   }
 
   fetchImages() {
-    const url = `${BASE_URL}?key=${API_Key}&q=${this.searchQuery}&image_type=photo&per_page=20&page=${this.page}&orientation=horizontal&safesearch=true`;
+    const url = `${BASE_URL}?key=${API_Key}&q=${this.searchQuery}&image_type=photo&per_page=40&page=${this.page}&orientation=horizontal&safesearch=true`;
 
     return fetch(url)
       .then(response => response.json())
       .then(data => {
         this.incrementPage();
-        // console.log(data);
         return data;
       });
   }
 
   incrementPage() {
     this.page += 1;
+  }
+
+  resetPage() {
+    this.page = 1;
   }
 
   get query() {

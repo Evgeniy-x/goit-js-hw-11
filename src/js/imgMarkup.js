@@ -1,6 +1,6 @@
-export default imgMarkup;
+export default imagesMarkup;
 
-function imgMarkup({
+function imagesMarkup({
   webformatURL,
   largeImageURL,
   tags,
@@ -9,8 +9,10 @@ function imgMarkup({
   comments,
   downloads,
 }) {
-  return `<div class="photo-card">
-          <a href="${largeImageURL}"><img src="${webformatURL}" alt="${tags}" loading="lazy"/></a>
+  return `
+      <a href="${largeImageURL}" class="slider"> 
+        <div class="photo-card">
+          <img src="${webformatURL}" alt="${tags}" loading="lazy"/>
           <div class="info">
             <p class="info-item">
             <b>Likes</b>
@@ -29,5 +31,6 @@ function imgMarkup({
               <b>${downloads}</b>
             </p>
           </div>
-        </div>`;
+        </div>
+      </a>`;
 }
