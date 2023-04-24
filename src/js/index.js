@@ -23,6 +23,10 @@ async function onSearch(e) {
   imagesAPIServise.query = e.currentTarget.elements.searchQuery.value;
   imagesAPIServise.resetPage();
 
+  if (imagesAPIServise.query.trim() === '') {
+    return Notify.info('Field must not be empty');
+  }
+
   try {
     const { totalHits, hits } = await imagesAPIServise.fetchImages();
 
@@ -52,7 +56,7 @@ async function onLoadMore() {
 }
 
 function appendImagesMarkup(array) {
-  array.forEach(elem =>
+  array.map(elem =>
     refs.gallery.insertAdjacentHTML('beforeend', imagesMarkup(elem))
   );
   slider.refresh();
