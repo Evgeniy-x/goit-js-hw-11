@@ -14,7 +14,7 @@ let counter = 0;
 refs.form.addEventListener('submit', onSearch);
 refs.button.addEventListener('click', onLoadMore);
 
-function onSearch(e) {
+async function onSearch(e) {
   e.preventDefault();
 
   clearImagesContainer();
@@ -23,32 +23,32 @@ function onSearch(e) {
   imagesAPIServise.query = e.currentTarget.elements.searchQuery.value;
   imagesAPIServise.resetPage();
 
-  imagesAPIServise
-    .fetchImages()
-    .then(response => {
-      if (response.hits.length === 0) {
-        Notify.failure(
-          'Sorry, there are no images matching your search query. Please try again.'
-        );
-        return;
-      }
-      appendImagesMarkup(response.hits);
-      onBtn(true);
-      checkNumberHits(response);
-    })
-    .catch(() =>
-      Notify.failure(
+  try {
+    const { totalHits, hits } = await imagesAPIServise.fetchImages();
+
+    if (totalHits === 0) {
+      return Notify.failure(
         'Sorry, there are no images matching your search query. Please try again.'
-      )
-    );
+      );
+    }
+
+    appendImagesMarkup(hits);
+    onBtn(true);
+    checkNumberHits(hits, totalHits);
+  } catch (error) {
+    Notify.failure(error.message);
+  }
 }
 
-function onLoadMore() {
-  imagesAPIServise.fetchImages().then(response => {
-    appendImagesMarkup(response.hits);
-    checkNumberHits(response);
-    Notify.info(`Hooray! We found ${counter} images.`);
-  });
+async function onLoadMore() {
+  try {
+    const { totalHits, hits } = await imagesAPIServise.fetchImages();
+    appendImagesMarkup(hits);
+    checkNumberHits(hits, totalHits);
+    // Notify.info(`Hooray! We found ${counter} images.`);
+  } catch (error) {
+    Notify.failure(error.message);
+  }
 }
 
 function appendImagesMarkup(array) {
@@ -62,9 +62,9 @@ function clearImagesContainer() {
   refs.gallery.innerHTML = '';
 }
 
-function checkNumberHits(data) {
-  counter += data.hits.length;
-  if (counter >= data.totalHits) {
+function checkNumberHits(hits, totalHits) {
+  counter += hits.length;
+  if (counter >= totalHits) {
     Notify.warning(
       "We're sorry, but you've reached the end of search results."
     );

@@ -7,15 +7,12 @@ export default class ImagesApiServise {
     this.page = 1;
   }
 
-  fetchImages() {
+  async fetchImages() {
     const url = `${BASE_URL}?key=${API_Key}&q=${this.searchQuery}&image_type=photo&per_page=40&page=${this.page}&orientation=horizontal&safesearch=true`;
 
-    return fetch(url)
-      .then(response => response.json())
-      .then(data => {
-        this.incrementPage();
-        return data;
-      });
+    const response = await fetch(url);
+    this.incrementPage();
+    return await response.json();
   }
 
   incrementPage() {
