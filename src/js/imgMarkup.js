@@ -1,15 +1,18 @@
 export default imagesMarkup;
 
-function imagesMarkup({
-  webformatURL,
-  largeImageURL,
-  tags,
-  likes,
-  views,
-  comments,
-  downloads,
-}) {
-  return `
+function imagesMarkup(images) {
+  return images
+    .map(
+      ({
+        webformatURL,
+        largeImageURL,
+        tags,
+        likes,
+        views,
+        comments,
+        downloads,
+      }) =>
+        `
       <a href="${largeImageURL}" class="slider"> 
         <div class="photo-card">
           <img src="${webformatURL}" alt="${tags}" loading="lazy"/>
@@ -32,5 +35,7 @@ function imagesMarkup({
             </p>
           </div>
         </div>
-      </a>`;
+      </a>`
+    )
+    .join('');
 }

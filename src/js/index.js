@@ -56,9 +56,7 @@ async function onLoadMore() {
 }
 
 function appendImagesMarkup(array) {
-  array.map(elem =>
-    refs.gallery.insertAdjacentHTML('beforeend', imagesMarkup(elem))
-  );
+  refs.gallery.insertAdjacentHTML('beforeend', imagesMarkup(array));
   slider.refresh();
 }
 
