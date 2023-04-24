@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 const BASE_URL = 'https://pixabay.com/api/';
 const API_Key = '35582471-f0842d41f87fce55fea8bc3c7';
 
@@ -10,9 +12,9 @@ export default class ImagesApiServise {
   async fetchImages() {
     const url = `${BASE_URL}?key=${API_Key}&q=${this.searchQuery}&image_type=photo&per_page=40&page=${this.page}&orientation=horizontal&safesearch=true`;
 
-    const response = await fetch(url);
+    const response = await axios.get(url);
     this.incrementPage();
-    return await response.json();
+    return await response.data;
   }
 
   incrementPage() {
