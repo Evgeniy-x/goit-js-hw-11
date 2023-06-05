@@ -1,9 +1,10 @@
 import refs from './refs.js';
 import ImagesApiServise from './images-servise.js';
 import imagesMarkup from './imgMarkup.js';
+import windowScroll from './window-scroll.js';
 
 import { Notify } from 'notiflix';
-
+import _throttle from 'lodash.throttle';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
@@ -13,6 +14,7 @@ let counter = 0;
 
 refs.form.addEventListener('submit', onSearch);
 refs.button.addEventListener('click', onLoadMore);
+window.addEventListener('scroll', _throttle(onWindowScroll, 500));
 
 async function onSearch(e) {
   e.preventDefault();
@@ -38,6 +40,7 @@ async function onSearch(e) {
 
     appendImagesMarkup(hits);
     onBtn(true);
+    Notify.info(`Hooray! We found ${totalHits} images.`);
     checkNumberHits(hits, totalHits);
   } catch (error) {
     Notify.failure(error.message);
@@ -49,9 +52,31 @@ async function onLoadMore() {
     const { totalHits, hits } = await imagesAPIServise.fetchImages();
     appendImagesMarkup(hits);
     checkNumberHits(hits, totalHits);
-    // Notify.info(`Hooray! We found ${counter} images.`);
+    windowScroll();
   } catch (error) {
     Notify.failure(error.message);
+  }
+}
+
+async function onWindowScroll() {
+  const documentRect = document.documentElement.getBoundingClientRect();
+
+  if (documentRect.bottom < document.documentElement.clientHeight + 150) {
+    try {
+      if (counter >= totalHits) {
+        return Notify.warning('This all!!!');
+      }
+      const { totalHits, hits } = await imagesAPIServise.fetchImages();
+      counter += totalHits;
+      console.log(totalHits);
+      appendImagesMarkup(hits);
+      if (counter >= totalHits) {
+        return Notify.warning('This all!!!');
+      }
+      // checkNumberHits(hits, totalHits);
+    } catch (error) {
+      Notify.failure(error.message);
+    }
   }
 }
 
